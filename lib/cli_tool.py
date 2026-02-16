@@ -1,7 +1,10 @@
 # cli_tool.py
 
 import argparse
-from models import Task, User
+from .models import Task, User
+# import sys
+
+# sys.stdout.reconfigure(encoding="utf-8")
 
 # Global dictionary to store users and their tasks
 users = {}
