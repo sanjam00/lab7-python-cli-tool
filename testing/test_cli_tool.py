@@ -3,7 +3,7 @@ import os
 
 def run_cli_command(command):
     """Helper to run CLI command and capture output"""
-    return subprocess.run(command, capture_output=True, text=True)
+    return subprocess.run(command, capture_output=True, text=True, encoding='utf-8')
 
 def test_add_task():
     result = run_cli_command(["python", "-m", "lib.cli_tool", "add-task", "Alice", "Submit report"])
@@ -14,7 +14,8 @@ def test_complete_task_with_script(tmp_path):
     script_path = tmp_path / "script.py"
     script_content = f"""
 import sys
-sys.path.insert(0, '{os.getcwd().replace("\\\\", "/")}')
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, '{os.getcwd().replace("\\", "/")}')
 
 from lib.models import Task, User
 
@@ -25,7 +26,7 @@ task = Task("Finish lab")
 user.add_task(task)
 task.complete()
 """
-    script_path.write_text(script_content)
+    script_path.write_text(script_content, encoding='utf-8')
 
-    result = subprocess.run(["python", str(script_path)], capture_output=True, text=True)
+    result = subprocess.run(["python", str(script_path)], encoding='utf-8', capture_output=True, text=True)
     assert "✅ Task 'Finish lab' completed." in result.stdout
